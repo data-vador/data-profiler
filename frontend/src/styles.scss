@@ -1,0 +1,54 @@
+/* Vous pouvez ajouter des styles globaux ici */
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  background-color: #f5f5f5;
+}
+
+/* Styles pour le responsive design */
+@media (max-width: 768px) {
+  .mat-table {
+    font-size: 12px;
+  }
+  
+  .mat-header-cell, .mat-cell {
+    padding: 8px 4px !important;
+  }
+}
+
+/* Amélioration de l'affichage des tables sur mobile */
+.mat-table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.mat-header-row, .mat-row {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 8px;
+}
+
+.mat-header-cell, .mat-cell {
+  flex: 1;
+  min-width: 120px;
+  text-align: left;
+  padding: 0 8px;
+}
+
+/* Styles pour les barres de progression */
+.mat-progress-bar {
+  border-radius: 2px;
+}
+
+/* Styles pour les chips */
+.mat-chip {
+  font-size: 12px !important;
+  min-height: 24px !important;
+  line-height: 24px !important;
+}

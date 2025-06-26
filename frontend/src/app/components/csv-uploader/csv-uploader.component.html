@@ -1,0 +1,130 @@
+<div class="container">
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>Profilage de fichier CSV avec Deequ</mat-card-title>
+      <mat-card-subtitle>Téléchargez un fichier CSV pour analyser sa qualité de données</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <!-- Section de téléchargement -->
+      <div class="upload-section">
+        <input 
+          type="file" 
+          (change)="onFileSelected($event)" 
+          accept=".csv"
+          #fileInput
+          class="file-input">
+        
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="fileInput.click()"
+          class="select-button">
+          <mat-icon>upload_file</mat-icon>
+          Sélectionner un fichier CSV
+        </button>
+        
+        <div class="file-info" *ngIf="selectedFile">
+          <mat-icon>description</mat-icon>
+          <span>{{ selectedFile.name }} ({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB)</span>
+        </div>
+        
+        <button 
+          mat-raised-button 
+          color="accent" 
+          (click)="onUpload()" 
+          [disabled]="!selectedFile || isLoading"
+          class="upload-button">
+          <mat-icon *ngIf="!isLoading">analytics</mat-icon>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+          {{ isLoading ? 'Analyse en cours...' : 'Analyser le fichier' }}
+        </button>
+      </div>
+      
+      <!-- Message d'erreur -->
+      <mat-error *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </mat-error>
+      
+      <!-- Résultats du profilage -->
+      <div class="results-section" *ngIf="profileResults.length > 0">
+        <h3>Résultats du profilage</h3>
+        
+        <mat-table [dataSource]="profileResults" class="results-table">
+          <!-- Colonne nom -->
+          <ng-container matColumnDef="columnName">
+            <mat-header-cell *matHeaderCellDef>Nom de la colonne</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ result.columnName }}</mat-cell>
+          </ng-container>
+          
+          <!-- Type de données -->
+          <ng-container matColumnDef="dataType">
+            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+            <mat-cell *matCellDef="let result">
+              <mat-chip class="type-chip">{{ result.dataType }}</mat-chip>
+            </mat-cell>
+          </ng-container>
+          
+          <!-- Complétude -->
+          <ng-container matColumnDef="completeness">
+            <mat-header-cell *matHeaderCellDef>Complétude</mat-header-cell>
+            <mat-cell *matCellDef="let result">
+              <div class="completeness-cell">
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="(result.completeness || 0) * 100">
+                </mat-progress-bar>
+                <span>{{ formatPercentage(result.completeness) }}</span>
+              </div>
+            </mat-cell>
+          </ng-container>
+          
+          <!-- Valeurs distinctes -->
+          <ng-container matColumnDef="distinctCount">
+            <mat-header-cell *matHeaderCellDef>Valeurs distinctes</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ result.distinctCount || 'N/A' }}</mat-cell>
+          </ng-container>
+          
+          <!-- Moyenne -->
+          <ng-container matColumnDef="mean">
+            <mat-header-cell *matHeaderCellDef>Moyenne</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ formatNumber(result.mean) }}</mat-cell>
+          </ng-container>
+          
+          <!-- Écart-type -->
+          <ng-container matColumnDef="stdDev">
+            <mat-header-cell *matHeaderCellDef>Écart-type</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ formatNumber(result.stdDev) }}</mat-cell>
+          </ng-container>
+          
+          <!-- Minimum -->
+          <ng-container matColumnDef="min">
+            <mat-header-cell *matHeaderCellDef>Min</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ result.min || 'N/A' }}</mat-cell>
+          </ng-container>
+          
+          <!-- Maximum -->
+          <ng-container matColumnDef="max">
+            <mat-header-cell *matHeaderCellDef>Max</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ result.max || 'N/A' }}</mat-cell>
+          </ng-container>
+          
+          <!-- Valeurs nulles -->
+          <ng-container matColumnDef="nullCount">
+            <mat-header-cell *matHeaderCellDef>Valeurs nulles</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ result.nullCount }}</mat-cell>
+          </ng-container>
+          
+          <!-- Total -->
+          <ng-container matColumnDef="totalCount">
+            <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+            <mat-cell *matCellDef="let result">{{ result.totalCount }}</mat-cell>
+          </ng-container>
+          
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
