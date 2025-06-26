@@ -12,7 +12,7 @@ Cette application web permet de réaliser le profilage de fichiers CSV en utilis
 
 ```
 ┌─────────────────┐    HTTP/REST    ┌─────────────────┐
-│                 │   ←----------→   │                 │
+│                 │   ←----------→  │                 │
 │   Frontend      │                 │   Backend       │
 │   Angular       │                 │   Spring Boot   │
 │   Port: 4200    │                 │   Port: 8080    │
